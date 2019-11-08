@@ -1,0 +1,310 @@
+<div class="row">
+  <div class="col-sm-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Asignaturas</h5>
+        <div class="card-text">
+          <div class="col-xs-6">
+            <table class="table table-sm">
+              <thead>
+                <th>Nombre</th>
+                <th>Operations</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let subject of subjectService.subjects">
+                  <td>{{subject.name}}</td>
+                  <td>
+                    <a (click)="subjectDetail(subject._id)">
+                      <i class="material-icons">info</i>
+                    </a>
+                    <a (click)="deleteSubject(subject._id)">
+                      <i class="material-icons">delete</i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#subjectModal">
+          Añadir Asignatura
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Estudiantes</h5>
+        <div class="card-text">
+          <div class="col-xs-12">
+            <table class="table table-sm">
+              <thead>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Operations</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let student of studentService.students">
+                  <td>{{student.name}}</td>
+                  <td>{{student.address}}</td>
+                  <td>
+                    <a (click)="editStudent(student._id)">
+                      <i class="material-icons">edit</i>
+                    </a>
+                    <a (click)="deleteStudent(student._id)">
+                      <i class="material-icons">delete</i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#studentModal"
+          (click)="add==true">
+          Añadir Estudiante
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Listados</h5>
+        <div class="card-text">
+          <div class="col-xs-12">
+            <button (click)="getStudentsTelecos()" type="button" class="btn btn-primary" data-toggle="modal"
+              data-target="#telecosModal">
+              Lista estudiantes Sistemas de telecomunicaciones
+            </button>
+          </div>
+          <div class="col-xs-12">
+            <button (click)="getStudentsTelematica()" type="button" class="btn btn-primary" data-toggle="modal"
+              data-target="#telematicaModal">
+              Lista estudiantes Telematica
+            </button>
+          </div>
+          <div class="col-xs-12">
+            <button (click)="getStudentsAeros()" type="button" class="btn btn-primary" data-toggle="modal"
+              data-target="#aerosModal">
+              Lista estudiantes Sistemas Aeroespaciales
+            </button>
+          </div>
+
+        </div>
+        <!-- Button trigger modal -->
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Subject Modal -->
+  <div class="modal fade" id="subjectModal" tabindex="-1" role="dialog" aria-labelledby="subjectModal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="subjectModal">Añadir Asignatura</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <form #subjectForm="ngForm" (ngSumbit)="addSubject(subjectForm)">
+            <div class="form-group row">
+              <input type="hidden" name="_id" #_id="ngModel" [(ngModel)]="subjectService.selectedSubject._id">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Nombre</label>
+              <div class="col-sm-10">
+                <input id="subjectName" class="form-control" type="text" name="name" #name="ngModel"
+                  [(ngModel)]="subjectService.selectedSubject.name" placeholder="Nombre de la asignatura">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="addSubject(subjectForm)" data-dismiss="modal">Save
+            changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Modal -->
+  <div class="modal fade" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="studentModal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="studentModal">Añadir estudiante</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #studentForm="ngForm" (ngSumbit)="addStudent(studentForm)">
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Nombre</label>
+              <div class="col-sm-10">
+                <input id="studentName" class="form-control" type="text" name="name" #name="ngModel"
+                  [(ngModel)]="studentName" placeholder="Nombre del estudiante">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword3" class="col-sm-2 col-form-label">Dirección</label>
+              <div class="col-sm-10">
+                <input id="studentAddress" class="form-control" type="text" name="address" #address="ngModel"
+                  [(ngModel)]="studentAddress" placeholder="Dirección del estudiante">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword3" class="col-sm-2 col-form-label">Fijo</label>
+              <div class="col-sm-10">
+                <input id="studentFijo" class="form-control" type="text" name="studentFijo" #address="ngModel"
+                  [(ngModel)]="studentFijo" placeholder="Número de teléfono fijo">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword3" class="col-sm-2 col-form-label">Móvil</label>
+              <div class="col-sm-10">
+                <input id="studentMovil" class="form-control" type="text" name="studentMovil" #address="ngModel"
+                  [(ngModel)]="studentMovil" placeholder="Número de teléfono móvil">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword3" class="col-sm-2 col-form-label">Número</label>
+              <div class="col-sm-10">
+                <label><input id="aeros" #address="ngModel" [(ngModel)]="aeros" type="checkbox" class="form-control"
+                    name="aeros">Aeros</label>
+                <label><input id="telematica" #address="ngModel" [(ngModel)]="telematica" type="checkbox"
+                    class="form-control" name="telematica">Telematica</label>
+                <label><input id="telecos" #address="ngModel" [(ngModel)]="telecos" type="checkbox" class="form-control"
+                    name="telecos">Telecos</label>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="addStudent(studentForm)" data-dismiss="modal">Save
+            changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Lista Telecos Modal -->
+  <div class="modal fade" id="telecosModal" tabindex="-1" role="dialog" aria-labelledby="telecosModal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="telecosModal">Lista de estudiantes de Telecomunicaciones</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead>
+              <th>Nombre</th>
+              <th>Dirección</th>
+              <th>Fijo</th>
+              <th>Móvil</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let student of studentsTelecos">
+                <td>{{ student.name }}</td>
+                <td>{{ student.address }}</td>
+                <td>{{ student.phones[0].value }}</td>
+                <td>{{ student.phones[1].value }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista Telematica Modal -->
+  <div class="modal fade" id="telematicaModal" tabindex="-1" role="dialog" aria-labelledby="telematicaModal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="telematicaModal">Lista estudiantes Telemática</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead>
+              <th>Nombre</th>
+              <th>Dirección</th>
+              <th>Fijo</th>
+              <th>Móvil</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let student of studentsTelematica">
+                <td>{{ student.name }}</td>
+                <td>{{ student.address }}</td>
+                <td>{{ student.phones[0].value }}</td>
+                <td>{{ student.phones[1].value }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista Telematica Modal -->
+  <div class="modal fade" id="aerosModal" tabindex="-1" role="dialog" aria-labelledby="aerosModal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="telematicaModal">Lista de estudiantes de Aeroespaciales</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead>
+              <th>Nombre</th>
+              <th>Dirección</th>
+              <th>Fijo</th>
+              <th>Móvil</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let student of studentsAeros">
+                <td>{{ student.name }}</td>
+                <td>{{ student.address }}</td>
+                <td>{{ student.phones[0].value }}</td>
+                <td>{{ student.phones[1].value }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
